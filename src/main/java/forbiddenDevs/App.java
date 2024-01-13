@@ -1,7 +1,7 @@
 package forbiddenDevs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import forbiddenDevs.util.RequestBodyGenerator;
+import forbiddenDevs.generator.RequestBodyGenerator;
 
 import java.util.Map;
 
