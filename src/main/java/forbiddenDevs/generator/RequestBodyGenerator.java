@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.javafaker.Faker;
 import forbiddenDevs.Constants;
+import forbiddenDevs.util.CommonUtils;
 
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class RequestBodyGenerator {
     of bodies to generate
 
      */
-    public static void generateFields(String jsonBody, Map<String, Integer> fields) throws JsonProcessingException {
+    public static void generateFields(String jsonBody, Map<String, Integer> fields, String outputFilePath) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(jsonBody);
         for (String field: fields.keySet()) {
@@ -33,32 +34,21 @@ public class RequestBodyGenerator {
                 if(!fields.get(field).equals(0)) totals = fields.get(field);
                 generateNames(nameGeneratedSet, totals);
                 for(String name: nameGeneratedSet) {
-                     //((ObjectNode) jsonNode).put(field, name);
-                     updateFieldValue(jsonNode, field, name);
+                     CommonUtils.updateFieldValue(jsonNode, field, name);
                      String newJsonBody = objectMapper.writeValueAsString(jsonNode);
+                     try {
+                         CommonUtils.writeJsonToFile(newJsonBody, outputFilePath);
+                     }
+                     catch (Exception ex) {
+                         System.out.println("Errored out while writing to file with message:"+ex.getMessage());
+                     }
                      System.out.println("New json body: " + newJsonBody);
                 }
             }
         }
     }
 
-    private static void updateFieldValue(JsonNode node, String fieldName, String newValue) {
-        if (node.isObject()) {
-            ObjectNode objectNode = (ObjectNode) node;
 
-            // Check if the current object has the field to update
-            if (objectNode.has(fieldName)) {
-                // Update the field value
-                objectNode.put(fieldName, newValue);
-            }
-
-            // Recursively update fields in child nodes
-            objectNode.fields().forEachRemaining(entry -> updateFieldValue(entry.getValue(), fieldName, newValue));
-        } else if (node.isArray()) {
-            // Recursively update fields in array elements
-            node.elements().forEachRemaining(element -> updateFieldValue(element, fieldName, newValue));
-        }
-    }
 
 
     public static void generateNames(Vector<String> nameSet, Integer length) {

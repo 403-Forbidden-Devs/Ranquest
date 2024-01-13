@@ -19,7 +19,7 @@ public class App
             String total = args[3];
             Map<String, Integer> testField = Map.of(field, Integer.parseInt(total));
             try{
-                RequestBodyGenerator.generateFields(jsonBody, testField);
+                RequestBodyGenerator.generateFields(jsonBody, testField, "src/test/java/testoutput/result.json");
             }
             catch (JsonProcessingException ex) {
                 System.out.println("Thing errored out with " + ex.getMessage());
