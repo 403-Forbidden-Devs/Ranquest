@@ -38,6 +38,15 @@
       <artifactId>javafaker</artifactId>
       <version>1.0.2</version> <!-- Use the latest version available -->
     </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.30</version>
+        <scope>provided</scope>
+      </dependency>
+
+
   </dependencies>
 
   <build>
